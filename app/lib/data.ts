@@ -13,15 +13,12 @@ const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
 export async function fetchRevenue() {
   try {
-    // Artificially delay a response for demo purposes.
-    // Don't do this in production :)
-
-    // console.log('Fetching revenue data...');
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
+    console.log("Fetching revenue data...");
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await sql<Revenue[]>`SELECT * FROM revenue`;
 
-    // console.log('Data fetch completed after 3 seconds.');
+    console.log("Data fetch completed after 3 seconds.");
 
     return data;
   } catch (error) {
@@ -167,6 +164,11 @@ export async function fetchInvoiceById(id: string) {
   }
 }
 
+/**
+ * Fetches all customers from the database.
+ * @returns An array of customer objects, each containing `id` and `name`.
+ * @throws An error if there is a problem fetching from the database.
+ */
 export async function fetchCustomers() {
   try {
     const customers = await sql<CustomerField[]>`
@@ -184,6 +186,11 @@ export async function fetchCustomers() {
   }
 }
 
+/**
+ * Fetches a list of customers filtered by the given query string.
+ * @param query - The search query string.
+ * @returns A list of customers with their total invoices, pending and paid amounts.
+ */
 export async function fetchFilteredCustomers(query: string) {
   try {
     const data = await sql<CustomersTableType[]>`
