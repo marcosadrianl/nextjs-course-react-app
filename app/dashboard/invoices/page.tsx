@@ -12,6 +12,21 @@ export const metadata: Metadata = {
   title: "Invoices",
 };
 
+/**
+ * The dashboard page for viewing and managing invoices.
+ *
+ * This page displays a table of all invoices, with filtering and pagination
+ * controls. It also includes a search bar and a button to create a new
+ * invoice.
+ *
+ * @param {{
+ *   searchParams?: Promise<{
+ *     query?: string;
+ *     page?: string;
+ *   }>;
+ * }} props
+ */
+
 export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;

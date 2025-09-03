@@ -1,10 +1,10 @@
-import Image from 'next/image';
-import { lusitana } from '@/app/ui/fonts';
-import Search from '@/app/ui/search';
+import Image from "next/image";
+import { lusitana } from "@/app/ui/fonts";
+import Search from "@/app/ui/search";
 import {
   CustomersTableType,
   FormattedCustomersTable,
-} from '@/app/lib/definitions';
+} from "@/app/lib/definitions";
 
 export default async function CustomersTable({
   customers,
@@ -105,10 +105,10 @@ export default async function CustomersTable({
                         {customer.total_invoices}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {customer.total_pending}
+                        ${Number(customer.total_pending) / 100}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
-                        {customer.total_paid}
+                        ${Number(customer.total_paid) / 100}
                       </td>
                     </tr>
                   ))}

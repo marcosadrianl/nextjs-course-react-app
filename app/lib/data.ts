@@ -118,6 +118,11 @@ export async function fetchFilteredInvoices(
   }
 }
 
+/**
+ * Fetches the total number of pages for the given query.
+ * @param query - The search query string.
+ * @returns The total number of pages.
+ */
 export async function fetchInvoicesPages(query: string) {
   try {
     const data = await sql`SELECT COUNT(*)
@@ -174,7 +179,13 @@ export async function fetchCustomers() {
     const customers = await sql<CustomerField[]>`
       SELECT
         id,
-        name
+        name,
+        email,
+        image_url,
+        (SELECT COUNT(*) FROM invoices WHERE customer_id = customers.id) AS total_invoices,
+        (SELECT SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) FROM invoices WHERE customer_id = customers.id) AS total_pending,
+        (SELECT SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) FROM invoices WHERE customer_id = customers.id) AS total_paid
+
       FROM customers
       ORDER BY name ASC
     `;
@@ -199,9 +210,10 @@ export async function fetchFilteredCustomers(query: string) {
 		  customers.name,
 		  customers.email,
 		  customers.image_url,
-		  COUNT(invoices.id) AS total_invoices,
-		  SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
-		  SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END) AS total_paid
+      (SELECT COUNT(*) FROM invoices WHERE customer_id = customers.id) AS customers.total_invoices,
+      (SELECT SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) FROM invoices WHERE customer_id = customers.id) AS customers.total_pending,
+      (SELECT SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) FROM invoices WHERE customer_id = customers.id) AS customers.total_paid
+
 		FROM customers
 		LEFT JOIN invoices ON customers.id = invoices.customer_id
 		WHERE
